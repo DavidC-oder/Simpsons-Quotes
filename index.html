@@ -1,0 +1,14 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>The Simpsons Quote Finder</title><meta name="description" content="There's a Simpsons quote for everything.">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@500;700&family=Lilita+One&display=swap" rel="stylesheet"><link rel="stylesheet" href="style.css"></head><body><div class="bg" aria-hidden="true"><i class="cloud" style="top:8%;--s:1;--t:70s"></i><i class="cloud" style="top:38%;--s:.7;--t:95s;animation-delay:-40s"></i><i class="cloud" style="top:72%;--s:.9;--t:80s;animation-delay:-20s"></i><i class="donut" style="left:4%;top:18%;--s:64px;--r:-12deg"></i><i class="donut" style="right:5%;top:30%;--s:90px;--r:20deg;animation-delay:-2s"></i><i class="donut" style="left:8%;top:62%;--s:80px;--r:35deg;animation-delay:-4s"></i><i class="donut" style="right:10%;top:78%;--s:56px;--r:-30deg;animation-delay:-1s"></i><i class="donut" style="left:46%;top:92%;--s:70px;--r:10deg;animation-delay:-3s"></i></div>
+<header><h1>THE SIMPSONS<br>QUOTE FINDER</h1><p class="sub">There's a Simpsons quote for everything.</p></header>
+<main>
+<section class="search"><textarea id="q" rows="2" maxlength="300" placeholder="What's happening in your life?"></textarea>
+<div class="row"><select id="char" aria-label="Character"></select><button id="go" class="btn">Find My Simpsons Quote</button></div>
+<div id="sugg" class="chips"></div><div class="row"><button id="rand" class="btn alt">Random Quote</button><button id="favs" class="btn alt">Favorites</button></div></section>
+<p id="status" aria-live="polite"></p><section id="results"></section>
+<div class="row"><button id="more" class="btn alt" hidden>Find More Quotes</button></div>
+<section><h2>Quote of the Day</h2><div id="qotd"></div></section>
+<section><h2>Recent Searches</h2><div id="recent" class="chips"></div></section>
+</main><footer>Fan project. Not affiliated with or endorsed by The Simpsons or its rights holders.</footer>
+<script src="app.js"></script></body></html>
