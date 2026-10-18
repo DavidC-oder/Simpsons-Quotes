@@ -12,3 +12,6 @@ Edit `data/quotes.json`, one record per quote (id, text, character, season, epis
 
 ## Cost controls
 gpt-4o-mini, 150 max output tokens, 300-char input cap, 8 requests/min per IP (in-memory, best-effort). Also set a monthly spend limit in your OpenAI billing settings.
+
+## Bulk import
+Put quotes you are authorized to use in a CSV (see `data/import-template.csv`), then run `node scripts/import-quotes.js yourfile.csv` on a computer. It validates, removes duplicates, assigns ids and merges into `data/quotes.json`. The character dropdown automatically lists only characters that have quotes.

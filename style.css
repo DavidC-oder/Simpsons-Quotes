@@ -11,7 +11,7 @@ header,main,footer{position:relative;z-index:1}
 .donut:after{content:"";position:absolute;left:50%;top:50%;width:.07em;height:.03em;margin:-.015em 0 0 -.035em;border-radius:2px;box-shadow:.30em 0 #fff,.22em .22em #1E88E5,0 .32em #fed90f,-.24em .20em #fff,-.32em -.04em #7ed957,-.20em -.25em #1E88E5,.04em -.34em #fed90f,.24em -.22em #7ed957}
 @keyframes bob{50%{transform:translateY(-18px) rotate(calc(var(--r) + 12deg))}}
 /* title */
-header{text-align:center;padding:34px 0 12px}
+header{text-align:center;padding:34px 0 44px}
 h1{margin:0;font-family:var(--f);font-weight:400;font-size:clamp(2.3rem,9vw,4.2rem);line-height:.98;color:var(--y);-webkit-text-stroke:3px var(--d);paint-order:stroke fill;letter-spacing:1px;text-shadow:3px 3px 0 var(--d);animation:drop .8s cubic-bezier(.3,1.6,.5,1)}
 @keyframes drop{from{opacity:0;transform:translateY(-40px) rotate(-3deg)}}
 .sub{display:inline-block;margin:18px 0 0;font-family:var(--f);font-size:1.15rem;background:var(--p);color:#fff;-webkit-text-stroke:.5px var(--d);border:3px solid var(--d);border-radius:999px;padding:4px 18px;transform:rotate(-2deg);box-shadow:3px 3px 0 var(--d)}
@@ -19,7 +19,7 @@ main{max-width:720px;margin:auto}
 h2{font-family:var(--f);font-weight:400;font-size:1.7rem;margin:30px 0 8px;color:#fff;-webkit-text-stroke:2px var(--d);paint-order:stroke fill;text-shadow:3px 3px 0 var(--d)}
 /* search panel */
 .search{background:var(--y);border:4px solid var(--d);border-radius:26px;padding:18px;box-shadow:6px 6px 0 var(--d);animation:pop .5s .2s both}
-textarea{width:100%;font:inherit;font-weight:500;font-size:1.15rem;padding:14px;border:3px solid var(--d);border-radius:16px;resize:vertical;background:#fffdf2}
+textarea{width:100%;font:inherit;font-weight:500;font-size:1.15rem;padding:14px;border:3px solid var(--d);border-radius:16px;resize:none;background:#fffdf2}
 textarea:focus,select:focus{outline:4px solid var(--p)}
 .row{display:flex;gap:10px;flex-wrap:wrap;margin:12px 0}
 select{flex:1 1 180px;font:inherit;font-weight:700;padding:12px;border-radius:999px;border:3px solid var(--d);background:#fff}
@@ -51,3 +51,12 @@ footer{text-align:center;font-size:.8rem;font-weight:700;margin-top:40px}
 @keyframes bump{40%{transform:scale(1.03) rotate(-1deg)}}
 .ribbon{position:absolute;top:-12px;right:14px;background:#d6247a;color:#fff;font-family:var(--f);border:3px solid var(--d);border-radius:999px;padding:0 14px;font-size:.95rem;transform:rotate(3deg);animation:pop .3s both}
 .acts button.on{background:#d6247a;color:#fff}
+
+header.mini{padding:20px 0 10px}header.mini h1{font-size:clamp(1.5rem,5.5vw,2.2rem);-webkit-text-stroke:2px var(--d)}.home{text-decoration:none}
+.back{text-align:center;text-decoration:none;display:block}
+@property --a{syntax:"<angle>";inherits:false;initial-value:0deg}
+#loader{text-align:center;padding:60px 0}
+#loader .donut{position:relative;display:block;font-size:130px;margin:0 auto 30px;--r:0deg;animation:eat 1.8s linear infinite;-webkit-mask:conic-gradient(transparent var(--a),#000 var(--a));mask:conic-gradient(transparent var(--a),#000 var(--a))}
+@keyframes eat{from{--a:0deg}to{--a:360deg}}
+#loader p{font-family:var(--f);font-size:2.2rem;margin:0;color:#fff;-webkit-text-stroke:2px var(--d);paint-order:stroke fill;text-shadow:3px 3px 0 var(--d);animation:pulse 1s ease-in-out infinite}
+@keyframes pulse{50%{transform:scale(1.07) rotate(-1deg)}}
