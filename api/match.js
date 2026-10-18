@@ -12,7 +12,7 @@ module.exports = async (req, res) => {
   const { situation = '', character = 'All Characters' } = req.body || {};
   const s = String(situation).slice(0, 300).trim();
   if (!s) return res.status(400).json({ error: 'Empty situation' });
-  const pool = quotes.filter(q => character === 'All Characters' || q.character === character);
+  const pool = quotes.filter(q => character === 'All Characters' || q.character === character).sort((a, b) => (a.rank || 999) - (b.rank || 999));
   const base = kw(s, pool);
   if (!process.env.OPENAI_API_KEY || !pool.length) return res.status(503).json({ ids: base, mode: 'keyword' });
   try {

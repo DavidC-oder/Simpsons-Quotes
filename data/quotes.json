@@ -23,7 +23,8 @@
     "life is hard"
    ],
    "verified": false,
-   "source": "Recalled from memory; confirm on Frinkiac"
+   "source": "Recalled from memory; confirm on Frinkiac",
+   "rank": 3
   },
   {
    "id": "q003",
@@ -46,7 +47,8 @@
     "parent visit"
    ],
    "verified": false,
-   "source": "Recalled from memory; confirm on Frinkiac"
+   "source": "Recalled from memory; confirm on Frinkiac",
+   "rank": 1
   },
   {
    "id": "q005",
@@ -70,7 +72,8 @@
     "insult my friend"
    ],
    "verified": false,
-   "source": "Recalled from memory; confirm on Frinkiac"
+   "source": "Recalled from memory; confirm on Frinkiac",
+   "rank": 1
   },
   {
    "id": "q006",
@@ -96,7 +99,8 @@
     "terrible"
    ],
    "verified": false,
-   "source": "Recalled from memory; confirm on Frinkiac"
+   "source": "Recalled from memory; confirm on Frinkiac",
+   "rank": 1
   },
   {
    "id": "q007",
@@ -121,7 +125,8 @@
     "day off"
    ],
    "verified": false,
-   "source": "Recalled from memory; confirm on Frinkiac"
+   "source": "Recalled from memory; confirm on Frinkiac",
+   "rank": 5
   },
   {
    "id": "q002",
@@ -144,7 +149,8 @@
     "argument with partner"
    ],
    "verified": false,
-   "source": "Episode confirmed via blog.distributel.ca; exact wording still to be checked"
+   "source": "Episode confirmed via blog.distributel.ca; exact wording still to be checked",
+   "rank": 6
   },
   {
    "id": "q009",
@@ -167,7 +173,8 @@
     "lazy"
    ],
    "verified": false,
-   "source": "Recalled from memory; confirm on Frinkiac"
+   "source": "Recalled from memory; confirm on Frinkiac",
+   "rank": 4
   },
   {
    "id": "q010",
@@ -191,7 +198,8 @@
     "snack"
    ],
    "verified": false,
-   "source": "Recalled from memory; confirm on Frinkiac"
+   "source": "Recalled from memory; confirm on Frinkiac",
+   "rank": 2
   },
   {
    "id": "q011",
@@ -214,7 +222,8 @@
     "generation gap"
    ],
    "verified": false,
-   "source": "Recalled from memory; confirm on Frinkiac"
+   "source": "Recalled from memory; confirm on Frinkiac",
+   "rank": 2
   },
   {
    "id": "q012",
@@ -237,7 +246,8 @@
     "failed attempt"
    ],
    "verified": false,
-   "source": "Recalled from memory; confirm on Frinkiac"
+   "source": "Recalled from memory; confirm on Frinkiac",
+   "rank": 1
   },
   {
    "id": "q013",
@@ -260,7 +270,8 @@
     "made a mistake"
    ],
    "verified": false,
-   "source": "Episode from ranker.com list; exact wording to be checked"
+   "source": "Episode from ranker.com list; exact wording to be checked",
+   "rank": 1
   },
   {
    "id": "q014",
@@ -284,7 +295,8 @@
     "barbecue"
    ],
    "verified": false,
-   "source": "Confirmed via blog.distributel.ca; exact wording to be checked"
+   "source": "Confirmed via blog.distributel.ca; exact wording to be checked",
+   "rank": 1
   },
   {
    "id": "q015",
@@ -308,7 +320,8 @@
     "my team lost"
    ],
    "verified": false,
-   "source": "Confirmed via blog.distributel.ca; exact wording to be checked"
+   "source": "Confirmed via blog.distributel.ca; exact wording to be checked",
+   "rank": 1
   },
   {
    "id": "q016",
@@ -332,7 +345,8 @@
     "tired"
    ],
    "verified": false,
-   "source": "Confirmed via blog.distributel.ca; exact wording to be checked"
+   "source": "Confirmed via blog.distributel.ca; exact wording to be checked",
+   "rank": 2
   },
   {
    "id": "q017",
@@ -355,7 +369,8 @@
     "skipping church"
    ],
    "verified": false,
-   "source": "Recalled from memory; confirm on Frinkiac"
+   "source": "Recalled from memory; confirm on Frinkiac",
+   "rank": 7
   },
   {
    "id": "q018",
@@ -378,7 +393,8 @@
     "not my fault"
    ],
    "verified": false,
-   "source": "Catchphrase of this episode confirmed via simpsonswiki.com"
+   "source": "Catchphrase of this episode confirmed via simpsonswiki.com",
+   "rank": 1
   },
   {
    "id": "q019",
@@ -401,7 +417,8 @@
     "annoying fad"
    ],
    "verified": false,
-   "source": "Confirmed via simpsonswiki.com; exact wording to be checked"
+   "source": "Confirmed via simpsonswiki.com; exact wording to be checked",
+   "rank": 1
   }
  ]
 }

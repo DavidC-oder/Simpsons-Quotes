@@ -60,3 +60,17 @@ header.mini{padding:20px 0 10px}header.mini h1{font-size:clamp(1.5rem,5.5vw,2.2r
 @keyframes eat{from{--a:0deg}to{--a:360deg}}
 #loader p{font-family:var(--f);font-size:2.2rem;margin:0;color:#fff;-webkit-text-stroke:2px var(--d);paint-order:stroke fill;text-shadow:3px 3px 0 var(--d);animation:pulse 1s ease-in-out infinite}
 @keyframes pulse{50%{transform:scale(1.07) rotate(-1deg)}}
+
+h2 .chip{font-size:.8rem;vertical-align:middle;margin-left:8px;-webkit-text-stroke:0;text-shadow:none;color:var(--d)}
+.fx{position:fixed;inset:0;pointer-events:none;overflow:hidden;z-index:50}.fx>*{position:absolute}
+@keyframes fall{from{top:-90px}to{top:105%}}@keyframes rise{from{bottom:-90px}to{bottom:105%}}
+.fx b{font-family:var(--f);font-weight:400;color:var(--b);-webkit-text-stroke:2px var(--d);paint-order:stroke fill}
+.cf{width:12px;height:18px;border-radius:2px;border:2px solid var(--d)}
+.bln{width:46px;height:58px;border-radius:50%;border:3px solid var(--d)}.bln:after{content:"";position:absolute;left:50%;top:100%;width:2px;height:40px;background:var(--d)}
+.stamp{left:50%;top:38%;font-family:var(--f);font-size:clamp(2.4rem,11vw,5rem);color:var(--y);-webkit-text-stroke:3px var(--d);paint-order:stroke fill;text-shadow:5px 5px 0 var(--d);white-space:nowrap;animation:stampin 3s both}
+.stamp.dark{color:var(--d);-webkit-text-stroke:3px #7ed957;text-shadow:5px 5px 0 #7ed957}
+@keyframes stampin{0%{transform:translate(-50%,-50%) scale(3) rotate(-6deg);opacity:0}12%{transform:translate(-50%,-50%) scale(1) rotate(-6deg);opacity:1}80%{opacity:1}100%{opacity:0;transform:translate(-50%,-50%) scale(1.1) rotate(-6deg)}}
+.banner{left:0;right:0;top:40%;background:#d62828;color:#fff;font-family:var(--f);font-size:2rem;padding:10px 0;text-align:center;border:3px solid var(--d);border-width:3px 0;animation:slide 3s both}
+@keyframes slide{0%{transform:translateX(-110%)}15%,80%{transform:none}100%{transform:translateX(110%)}}
+.flames{left:0;right:0;bottom:0;height:35%;background:linear-gradient(to top,#ff5a1f,#ffb21f 50%,transparent);filter:blur(2px);animation:flame 3s both}
+@keyframes flame{0%{transform:translateY(100%)}20%{transform:none;opacity:1}85%{opacity:.9}100%{opacity:0}}
