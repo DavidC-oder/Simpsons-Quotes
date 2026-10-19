@@ -22,6 +22,18 @@ function rank(db, pool, terms) {
     for (const w of ts) { const idf = Math.log(1 + n / (1 + (df.get(w) || 0))); s += idf * ((d.t.has(w) ? 3 : 0) + Math.min(d.s.get(w) || 0, 2) + (d.c.has(w) ? 2 : 0)); }
     return { e, s }; }).filter(x => x.s > 0).sort((a, b) => b.s - a.s);
 }
+const SYN = { evil: ['villain', 'supervillain', 'sinister', 'maniacal', 'scheme'], boss: ['employer', 'job', 'company'], fat: ['weight', 'obese', 'overweight', 'eating'], expelled: ['expel', 'suspended', 'kicked'], lonely: ['friends', 'friendship', 'alone'], truck: ['trucker', 'driver'], vacation: ['trip', 'travel', 'holiday'] };
+const synonyms = ts => ts.concat(ts.flatMap(t => (SYN[t] || []).map(stem)));
+const nt = s => String(s).toLowerCase().replace(/[^a-z0-9 ]/g, ' ').replace(/\s+/g, ' ').trim();
+const jac = (a, b) => { const A = new Set(a.split(' ')), B = new Set(b.split(' ')); let i = 0; A.forEach(w => B.has(w) && i++); return i / (A.size + B.size - i); };
+// Maps titles the model suggests onto REAL database episodes only (exact or near-exact title match); anything else is discarded.
+function hinted(pool, titles) {
+  const out = [];
+  for (const t of titles) { const n = nt(t); if (!n) continue; let best = null, bs = 0;
+    for (const e of pool) { const j = nt(e.title) === n ? 1 : jac(nt(e.title), n); if (j > bs) { bs = j; best = e; } }
+    if (best && bs >= 0.8 && !out.includes(best)) out.push(best); }
+  return out;
+}
 async function chat(sys, user, max) {
   const r = await fetch(OPENAI + '/v1/chat/completions', { method: 'POST', signal: AbortSignal.timeout(15000),
     headers: { 'Content-Type': 'application/json', Authorization: 'Bearer ' + process.env.OPENAI_API_KEY },
@@ -42,15 +54,22 @@ module.exports = async (req, res) => {
   const key = q.toLowerCase() + '|' + JSON.stringify(filters);
   if (memo.has(key)) return res.status(200).json(memo.get(key));
   const ai = !!process.env.OPENAI_API_KEY;
-  let terms = tok(q);
-  if (ai) { try { const x = await chat('A user is describing a Simpsons episode. List up to 15 single words likely to appear in an official episode synopsis (character names, synonyms, themes, settings). Do not list episode titles. Reply as JSON {"terms":["..."]}.', q, 120); terms = terms.concat(tok((x.terms || []).join(' '))); } catch (e) {} }
-  const cands = rank(db, pool, terms).slice(0, 25);
-  let out = { ids: cands.map(x => x.e.id), mode: 'keyword' };
+  let terms = tok(q), hints = [];
+  if (ai) {
+    try {
+      const x = await chat('A user is describing a Simpsons episode they want to find. Reply as JSON {"terms":[...],"titles":[...]}. "terms": up to 15 single words likely to appear in an official episode synopsis (character names, synonyms such as villain for evil, themes, settings). "titles": up to 4 exact Simpsons episode titles you are fairly confident match the description (empty list if unsure). These are only search hints.', q, 220);
+      terms = terms.concat(tok((x.terms || []).join(' ')));
+      hints = hinted(pool, (Array.isArray(x.titles) ? x.titles : []).slice(0, 4));
+    } catch (e) {}
+  }
+  const ranked = rank(db, pool, synonyms(terms)).slice(0, 40).map(x => x.e), hid = new Set(hints.map(e => e.id));
+  const cands = hints.concat(ranked.filter(e => !hid.has(e.id))).slice(0, 40);
+  let out = { ids: cands.map(e => e.id), mode: 'keyword' };
   if (ai && cands.length) {
     try {
-      const list = cands.map(x => ({ id: x.e.id, code: x.e.code, title: x.e.title, synopsis: x.e.synopsis.slice(0, 450) }));
-      const r = await chat('You match a user description to Simpsons episodes. You get candidate episodes with titles and official synopses. Choose ONLY candidates that plausibly match what the user describes, best first, at most 10. Judge using the provided data only; never add episodes that are not in the list. If none plausibly match, return an empty list. Reply as JSON {"ids":[numbers]}.', JSON.stringify({ request: q, candidates: list }), 120);
-      const valid = new Set(cands.map(x => x.e.id)), pick = [...new Set((r.ids || []).map(Number))].filter(i => valid.has(i));
+      const list = cands.map(e => ({ id: e.id, code: e.code, title: e.title, synopsis: e.synopsis.slice(0, 400), hinted: hid.has(e.id) }));
+      const r = await chat('You match a user description to Simpsons episodes. You get candidate episodes with titles and official synopses; candidates with hinted=true were independently suggested as likely matches, so prefer them unless their synopsis clearly contradicts the request. Choose ONLY candidates that plausibly match, best first, at most 10. Never add episodes that are not in the list. If none plausibly match, return an empty list. Reply as JSON {"ids":[numbers]}.', JSON.stringify({ request: q, candidates: list }), 120);
+      const valid = new Set(cands.map(e => e.id)), pick = [...new Set((r.ids || []).map(Number))].filter(i => valid.has(i));
       out = { ids: pick.concat(out.ids.filter(i => !pick.includes(i)).slice(0, pick.length ? 10 : 0)), mode: 'ai' };
     } catch (e) {}
   }

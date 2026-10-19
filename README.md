@@ -1,6 +1,6 @@
 # The Simpsons Episode Finder
 Static site (index.html, results.html, style.css, app.js) + Vercel serverless functions (api/) + a TVmaze-powered episode database.
-No paid services. Episode data: TVmaze (CC BY-SA 4.0, no API key). Keep the TVmaze credit in the footer.
+No paid services. Episode data: TVmaze (CC BY-SA 4.0, no API key).
 
 ## Deploy
 1. Upload **every file and folder** to your GitHub repo (replace the old project): api/, lib/, data/, scripts/, .github/, index.html, results.html, style.css, app.js, package.json, vercel.json, README.md, .gitignore. Delete the old `api/match.js` and `data/quotes.json` if they remain.
@@ -14,4 +14,4 @@ No paid services. Episode data: TVmaze (CC BY-SA 4.0, no API key). Keep the TVma
 - Character tags/filters come from names appearing in the TVmaze title/synopsis (add names in `data/characters.json`); they are not a full cast list. "Classic era" = Seasons 1-10; Treehouse of Horror = title match.
 
 ## Search
-`/api/search`: (1) gpt-4o-mini expands your description into synopsis-style keywords, (2) keyword ranking over the real episodes, (3) gpt-4o-mini picks which of the top 25 candidates truly match, judged only from the supplied synopses. Returned ids are validated against the database, so nothing can be invented. Without an OpenAI key, or if OpenAI fails, keyword search is used. Costs are limited by 300-character inputs, small outputs, caching and 10 searches/min/IP.
+`/api/search`: (1) gpt-4o-mini expands your description into synopsis-style keywords and suggests likely episode titles (used only as hints and matched to real database titles), (2) keyword ranking over the real episodes, (3) gpt-4o-mini picks which of the top 40 candidates truly match, judged only from the supplied synopses. Returned ids are validated against the database, so nothing can be invented. Without an OpenAI key, or if OpenAI fails, keyword search is used. Costs are limited by 300-character inputs, small outputs, caching and 10 searches/min/IP.
