@@ -125,3 +125,6 @@ details.more{margin:6px 0}details.more summary{cursor:pointer;font-weight:700;co
 .card.toh details.more summary{color:#ff9d2e}.card.toh .src{color:#ffe9c4}
 .card.toh .acts button{background:#ff7a00;color:#150320}.card.toh .acts button.on{background:#b3001b;color:#fff}
 .card.toh.saved{border-color:#d6247a}.card.toh .ribbon{top:8px}
+
+.fx b.it{font-family:system-ui,-apple-system,"Apple Color Emoji","Segoe UI Emoji",sans-serif;-webkit-text-stroke:0;color:var(--b);text-shadow:2px 2px 0 rgba(27,42,65,.25)}
+@keyframes spin{to{transform:rotate(360deg)}}

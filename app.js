@@ -32,49 +32,33 @@ async function home(){try{await loadData()}catch{$('#status').textContent="Could
  $('#era').innerHTML='<option value="">All eras</option><option value="classic">Classic era (Seasons 1-10)</option>'+decs.map(d=>`<option value="d${d}">${d}s</option>`).join('');
  $('#seasons').innerHTML=seasons.map(s=>`<a class="chip" title="Season ${s}" href="results.html?s=${s}">${s}</a>`).join('');
  $('#go').onclick=()=>go($('#q').value,homeF());
- $('#char').onchange=e=>{const v=e.target.value;if(v){loadFont(v);setTimeout(()=>fx(v),250)}};
- if(E.filter(e=>e.wiki).length<E.length*.1)$('#status').textContent='Heads up: detailed episode descriptions are not loaded yet, so searches use short TV-guide blurbs. Run the "Update episodes" GitHub Action to fix this.';
+ $('#char').onchange=e=>{const v=e.target.value;if(v){setTimeout(()=>fx(v),250)}};
+ if(E.filter(e=>e.wiki).length<E.length*.1)console.warn('Episode details not loaded yet: run the Update episodes GitHub Action.');
  $('#q').addEventListener('keydown',e=>{if(e.key==='Enter'&&!e.shiftKey){e.preventDefault();go($('#q').value,homeF())}});
  $('#pick').onclick=()=>{location.href='results.html?'+qs({random:1,...homeF()})};
  $('#favs').onclick=()=>location.href='results.html?fav=1';
  const rr=()=>{const r=ls('recent',[]);$('#recent').innerHTML=r.map(t=>`<button class="chip" data-s="${esc(t)}">${esc(t)}</button>`).join('')||'<span class="meta">Nothing yet.</span>';$('#clr').hidden=!r.length};
  $('#clr').onclick=()=>{sv('recent',[]);rr()};rr();favCount()}
-const FONTS={moe:'Rye',bart:'Permanent+Marker',burns:'Cinzel:wght@700',cbg:'Bangers',bob:'Playfair+Display:ital,wght@1,700',marge:'Pacifico',krusty:'Chewy',ned:'Pacifico',nelson:'Luckiest+Guy',apu:'Titan+One',news:'Oswald:wght@700'};
+// One falling (or rising) item per character. Emoji glyphs; Homer uses the CSS donut. Add a character here to give them an effect.
 const FX={
-"Homer Simpson":{cls:'homer',v:[['rain'],['stamp',"D'oh!"],['words','Mmm... donuts','rise']]},
-"Bart Simpson":{cls:'bart',v:[['stamp','Ay, caramba!'],['words','Eat my shorts!','fall'],['words','Cowabunga!','rise']]},
-"Lisa Simpson":{cls:'lisa',v:[['notes'],['stamp','Honor roll!'],['words','A+','fall']]},
-"Maggie Simpson":{cls:'lisa',v:[['notes'],['stamp','*suck suck*'],['words','Pacifier!','rise']]},
-"Marge Simpson":{cls:'marge',v:[['stamp','Hrrrmm.'],['words','Homeeer!','rise'],['confetti',['#4fa3e0','#ffffff','#2a6fb0']]]},
-"Mr. Burns":{cls:'burns',v:[['stamp','Excellent...'],['words','Smithers!','rise'],['words','Release the hounds!','fall']]},
-"Principal Skinner":{cls:'skinner',v:[['fire'],['stamp','Steamed hams!'],['words','Seymour!','rise']]},
-"Comic Book Guy":{cls:'cbg',v:[['stamp','Worst. Search. Ever.'],['stamp','Ahem. Actually...'],['words','Actually...','fall']]},
-"Sideshow Bob":{cls:'bob',v:[['stamp','Thwack!'],['stamp','Foiled again!'],['words','Curses!','fall']]},
-"Ralph Wiggum":{cls:'ralph',v:[['balloons'],['stamp',"I'm learnding!"],['words','I choo-choo-choose you!','rise']]},
-"Kent Brockman":{cls:'news',v:[['banner','This just in!'],['banner','Breaking news'],['banner','Kent Brockman, Eyewitness News']]},
-"Krusty the Clown":{cls:'krusty',v:[['stamp','Hey hey!'],['confetti',['#ffd60a','#d62828','#1E88E5']],['words','Ha ha!','rise']]},
-"Ned Flanders":{cls:'ned',v:[['stamp','Hi-diddly-ho!'],['words','Okily-dokily!','rise'],['confetti',['#7bd47b','#a06cd5','#ffffff']]]},
-"Nelson Muntz":{cls:'nelson',v:[['stamp','Ha-ha!'],['words','Ha-ha!','fall'],['words','Smell ya later!','rise']]},
-"Apu":{cls:'apu',v:[['stamp','Thank you, come again!'],['words','Kwik-E-Mart','fall'],['confetti',['#d62828','#1e5bb8','#ffffff']]]},
-"Moe Szyslak":{cls:'moe',v:[['stamp',"Moe's Tavern"],['stamp','Last call!'],['words','Beer nuts!','rise']]}};
-const GEN={cls:'',v:[['confetti'],['rain'],['notes']]};
-const loadFont=c=>{const f=FONTS[(FX[c]||{}).cls];if(f&&!document.getElementById('f-'+f)){const l=document.createElement('link');l.id='f-'+f;l.rel='stylesheet';l.href='https://fonts.googleapis.com/css2?family='+f+'&display=swap';document.head.appendChild(l)}};
-function fx(c){if(matchMedia('(prefers-reduced-motion:reduce)').matches)return;const d=FX[c]||GEN;let i=Math.floor(Math.random()*3);
- try{if(+sessionStorage.getItem('fx-'+c)===i&&sessionStorage.getItem('fx-'+c)!==null)i=(i+1)%3;sessionStorage.setItem('fx-'+c,i)}catch{}
- const [t,x,y]=d.v[i],cls=d.cls,o=document.createElement('div'),R=(a,b)=>a+Math.random()*(b-a),col=Array.isArray(x)?x:['#ff7eb6','#1E88E5','#FBE78F','#7ed957'];o.className='fx';
- if(t==='rain')for(let n=0;n<16;n++)o.insertAdjacentHTML('beforeend',`<i class="donut" style="left:${R(0,92)}%;--s:${R(34,60)}px;--r:${R(-40,40)}deg;animation:fall ${R(1.6,2.8)}s ${R(0,1)}s ease-in both"></i>`);
- if(t==='notes')for(let n=0;n<14;n++)o.insertAdjacentHTML('beforeend',`<b style="left:${R(0,92)}%;font-size:${R(2,3.6)}rem;animation:rise ${R(2,3)}s ${R(0,.8)}s ease-out both">${'♪♫♩♬'[n%4]}</b>`);
- if(t==='balloons')for(let n=0;n<10;n++)o.insertAdjacentHTML('beforeend',`<i class="bln" style="left:${R(2,90)}%;background:#d62828;animation:rise ${R(2.4,3.4)}s ${R(0,.8)}s ease-out both"></i>`);
- if(t==='confetti')for(let n=0;n<40;n++)o.insertAdjacentHTML('beforeend',`<i class="cf" style="left:${R(0,98)}%;background:${col[n%col.length]};animation:fall ${R(1.4,2.6)}s ${R(0,1)}s ease-in both"></i>`);
- if(t==='words'){const max=Math.max(5,92-String(x).length*4);for(let n=0;n<9;n++)o.insertAdjacentHTML('beforeend',`<b class="w wc-${cls}" style="left:${R(0,max)}%;font-size:${R(1.4,2.5)}rem;animation:${y==='fall'?'fall':'rise'} ${R(2.2,3.4)}s ${R(0,1)}s ${y==='fall'?'ease-in':'ease-out'} both">${esc(x)}</b>`)}
- if(t==='stamp')o.innerHTML=`<div class="stamp st-${cls}">${esc(x)}</div>`;
- if(t==='banner')o.innerHTML=`<div class="banner st-${cls}">${esc(x)}</div>`;
- if(t==='fire')o.innerHTML='<div class="flames"></div>';
- document.body.appendChild(o);setTimeout(()=>o.remove(),4200)}
+"Homer Simpson":{donut:1},"Marge Simpson":{i:['🥩']},"Bart Simpson":{i:['🛹']},"Lisa Simpson":{i:['🎷','♪','♫']},"Maggie Simpson":{i:['🍼']},
+"Grampa Simpson":{i:['💤']},"Mr. Burns":{i:['💰','💵']},"Smithers":{i:['💼']},"Moe Szyslak":{i:['🍺']},"Barney Gumble":{i:['🍻']},
+"Ned Flanders":{i:['🙏']},"Milhouse Van Houten":{i:['👓']},"Nelson Muntz":{i:['👉']},"Principal Skinner":{i:['🍔']},"Superintendent Chalmers":{i:['📋']},
+"Ralph Wiggum":{i:['🎈'],rise:1},"Chief Wiggum":{i:['🚔','🍩']},"Comic Book Guy":{i:['📚']},"Krusty the Clown":{i:['🤡']},"Sideshow Bob":{i:['🎭']},
+"Lenny":{i:['⚛️']},"Carl":{i:['☢️']},"Apu":{i:['🥤']},"Patty Bouvier":{i:['🚬']},"Selma Bouvier":{i:['🦎']},"Kent Brockman":{i:['🎙️','📺']},
+"Troy McClure":{i:['🎬']},"Lionel Hutz":{i:['⚖️']},"Dr. Hibbert":{i:['🩺']},"Reverend Lovejoy":{i:['⛪']},"Edna Krabappel":{i:['✏️']},
+"Groundskeeper Willie":{i:['🧹']},"Professor Frink":{i:['🔬']},"Fat Tony":{i:['🍝']},"Mayor Quimby":{i:['🗳️']},"Otto Mann":{i:['🚌']},
+"Hans Moleman":{i:['🕳️']},"Duffman":{i:['🥫']},"Cletus":{i:['🌽']},"Jimbo Jones":{i:['🧨']},"Santa's Little Helper":{i:['🦴']}};
+function fx(c){const d=FX[c];if(!d||matchMedia('(prefers-reduced-motion:reduce)').matches)return;
+ const o=document.createElement('div'),R=(a,b)=>a+Math.random()*(b-a),dir=d.rise?'rise':'fall',ease=d.rise?'ease-out':'ease-in';o.className='fx';
+ for(let n=0;n<18;n++)o.insertAdjacentHTML('beforeend',d.donut
+  ?`<i class="donut" style="left:${R(0,92)}%;--s:${R(34,60)}px;--r:${R(-40,40)}deg;animation:fall ${R(1.8,3)}s ${R(0,1.2)}s ease-in both"></i>`
+  :`<b class="it" style="left:${R(0,92)}%;font-size:${R(2.2,3.6)}rem;animation:${dir} ${R(2.2,3.6)}s ${R(0,1.2)}s ${ease} both,spin ${R(1.5,3)}s linear infinite">${d.i[n%d.i.length]}</b>`);
+ document.body.appendChild(o);setTimeout(()=>o.remove(),5200)}
 const nameIn=q=>{for(const c of CH)if(c.aliases.some(a=>new RegExp('(^|[^a-z])'+a.replace(/[.*+?^${}()|[\]\\]/g,'\\$&')+'($|[^a-z])','i').test(q)))return c.name};
 async function results(){const P=new URLSearchParams(location.search),t0=Date.now(),f=filtOf(P),q=P.get('q')||'',fav=P.get('fav'),rnd=P.get('random');let ids=[],title,fail=false;
  try{await loadData()}catch{$('#loader').hidden=true;$('#err').hidden=false;return}
- const k=f.c||(q&&nameIn(q));if(k)loadFont(k);
+ const k=f.c||(q&&nameIn(q));
  const pool=E.filter(e=>match(e,f));MODE='list';
  if(fav){ids=ls('favs',[]).filter(byId);title='Your Favorites'}
  else if(rnd){MODE='random';title='Your Random Episode'}
