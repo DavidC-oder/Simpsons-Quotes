@@ -10,6 +10,7 @@ No paid services. Episode data: TVmaze (CC BY-SA 4.0, no API key).
 - `data/episodes.json` starts empty. Until it is filled, the site loads episodes **live from TVmaze** (cached), so it works right after deploy.
 - To fill/refresh the file: GitHub > Actions tab > "Update episodes" > Run workflow (in iPhone Safari, use "Request Desktop Website" if you don't see Actions). It also runs every Monday and commits changes, which triggers a Vercel redeploy. If the commit fails, enable Settings > Actions > General > Workflow permissions > Read and write.
 - Or run `node scripts/fetch-episodes.js` on a computer.
+- **Run the Action once.** TVmaze synopses are short TV-guide blurbs, so the update also pulls each episode's Wikipedia lead and Plot section (CC BY-SA 4.0; each card links to its source article). Articles are matched by title and rejected unless they mention The Simpsons and an episode. Unmatched episodes keep the TVmaze blurb only. This richer text is what makes searches like "evil villain with a flamethrower" work. It takes several minutes on the first run; later runs only fetch new episodes.
 - The script retries on failures, de-duplicates by season+episode, skips specials and unreleased episodes, refuses to shrink the database by more than 10%, and leaves missing synopses empty rather than guessing.
 - Character tags/filters come from names appearing in the TVmaze title/synopsis (add names in `data/characters.json`); they are not a full cast list. "Classic era" = Seasons 1-10; Treehouse of Horror = title match.
 

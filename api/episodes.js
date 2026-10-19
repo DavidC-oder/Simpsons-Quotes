@@ -3,6 +3,6 @@ module.exports = async (req, res) => {
   try {
     const db = await getDB();
     res.setHeader('Cache-Control', 'public, s-maxage=3600, stale-while-revalidate=86400');
-    res.status(200).json({ updated: db.updated || null, episodes: db.episodes });
+    res.status(200).json({ updated: db.updated || null, episodes: db.episodes.map(e => e.wiki ? { ...e, wiki: { url: e.wiki.url, intro: e.wiki.intro } } : e) });
   } catch (e) { res.status(503).json({ error: 'Episode data is temporarily unavailable' }); }
 };

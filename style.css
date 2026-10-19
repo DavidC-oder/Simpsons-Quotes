@@ -93,3 +93,18 @@ footer a{color:var(--d)}
 @keyframes roll{to{left:calc(100% + 90px);transform:rotate(1080deg)}}
 .doh p{font-family:var(--f);font-size:1.8rem;margin:6px 0;color:#fff;-webkit-text-stroke:2px var(--d);paint-order:stroke fill;text-shadow:3px 3px 0 var(--d);animation:pop .5s 1.2s both}
 .doh .meta{display:block;animation:pop .5s 1.5s both;font-weight:700}
+
+details.more{margin:6px 0}details.more summary{cursor:pointer;font-weight:700;color:#d6247a}.src{font-size:.8rem;font-weight:700;color:var(--d)}
+/* per-character stamp looks */
+.stamp[class*=st-]{-webkit-text-stroke:0;paint-order:normal}
+.st-moe{font-family:'Rye',serif;color:#f6e6c0;background:#5b3a1e;border:6px solid #2d1b0c;border-radius:10px;padding:.1em .5em;text-shadow:3px 3px 0 #2d1b0c;box-shadow:inset 0 0 0 4px #c8923c;font-size:clamp(2rem,9vw,4rem)}
+.st-bart{font-family:'Permanent Marker',cursive;color:#ff9f1c;-webkit-text-stroke:2px #1b2a41;text-shadow:4px 4px 0 #1b2a41}
+.st-burns{font-family:'Cinzel',serif;color:#d8f3dc;background:#12351f;border:5px double #b7e4c7;padding:.1em .6em;text-shadow:0 0 14px #52b788;letter-spacing:.1em;font-size:clamp(2rem,9vw,4rem)}
+.st-cbg{font-family:'Bangers',cursive;color:#fff;background:#d62828;padding:.35em 1em;letter-spacing:.05em;text-shadow:3px 3px 0 #1b2a41;clip-path:polygon(0 15%,8% 0,20% 12%,35% 0,50% 12%,65% 0,80% 12%,92% 0,100% 15%,96% 50%,100% 85%,92% 100%,80% 88%,65% 100%,50% 88%,35% 100%,20% 88%,8% 100%,0 85%,4% 50%);font-size:clamp(2rem,9vw,4rem)}
+.st-bob{font-family:'Playfair Display',serif;font-style:italic;font-weight:700;color:#b00020;border-bottom:8px solid #b00020;text-shadow:3px 3px 0 rgba(27,42,65,.35)}
+.st-marge{font-family:'Pacifico',cursive;color:#4fa3e0;-webkit-text-stroke:2px #1b2a41;text-shadow:3px 3px 0 #1b2a41}
+.st-krusty{font-family:'Chewy',cursive;color:#ffd60a;background:#d62828;border:5px solid #1b2a41;border-radius:50px;padding:.05em .6em;text-shadow:3px 3px 0 #1b2a41}
+.st-ned{font-family:'Pacifico',cursive;color:#7bd47b;-webkit-text-stroke:2px #1b5e20;text-shadow:3px 3px 0 #1b5e20}
+.st-nelson{font-family:'Luckiest Guy',cursive;color:#fff;-webkit-text-stroke:3px #5a189a;text-shadow:5px 5px 0 #5a189a}
+.st-apu{font-family:'Titan One',cursive;color:#fff;background:linear-gradient(#d62828 0 50%,#1e5bb8 50%);border:5px solid #fff;outline:4px solid #1b2a41;padding:.15em .5em;text-shadow:2px 2px 0 #1b2a41;font-size:clamp(1.5rem,7vw,3rem)}
+.banner.st-news{font-family:'Oswald',sans-serif;text-transform:uppercase;letter-spacing:.1em;font-size:2.2rem}

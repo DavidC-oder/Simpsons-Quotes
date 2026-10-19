@@ -6,20 +6,25 @@ const stem = w => (w.length > 4 ? w.replace(/(ing|ed|es|s)$/, '') : w);
 const tok = s => (String(s).toLowerCase().match(/[a-z0-9]+/g) || []).filter(w => w.length > 2 && !STOP.has(w)).map(stem);
 const filt = (eps, f = {}) => eps.filter(e => (!f.s || e.season == f.s) && (!f.c || e.characters.includes(f.c)) && (!f.h || e.halloween) && (!f.t || e.title.toLowerCase().includes(String(f.t).toLowerCase())) &&
   (!f.e || (f.e === 'classic' ? e.season <= 10 : Math.floor(+(e.airdate || '0').slice(0, 4) / 10) * 10 == +String(f.e).slice(1))));
+const cnt = a => { const m = new Map(); a.forEach(w => m.set(w, (m.get(w) || 0) + 1)); return m; };
 function index(db) {
   if (idx.has(db)) return idx.get(db);
   const df = new Map(), docs = new Map();
   for (const e of db.episodes) {
-    const t = tok(e.title), s = tok(e.synopsis), c = tok(e.characters.join(' '));
-    docs.set(e.id, { t: new Set(t), s: new Map(s.map(w => [w, s.filter(x => x === w).length])), c: new Set(c) });
-    new Set([...t, ...s, ...c]).forEach(w => df.set(w, (df.get(w) || 0) + 1));
+    const t = tok(e.title), s = tok(e.synopsis + ' ' + (e.wiki ? e.wiki.intro : '')), p = tok(e.wiki ? e.wiki.plot || '' : ''), c = tok(e.characters.join(' '));
+    docs.set(e.id, { t: new Set(t), s: cnt(s), p: new Set(p), c: new Set(c) });
+    new Set([...t, ...s, ...p, ...c]).forEach(w => df.set(w, (df.get(w) || 0) + 1));
   }
   const v = { df, docs, n: db.episodes.length }; idx.set(db, v); return v;
+}
+function plotSnip(e, terms) {
+  const p = e.wiki && e.wiki.plot; if (!p) return ''; const ts = new Set(terms);
+  return (p.match(/[^.!?]+[.!?]/g) || []).map(x => ({ x, n: tok(x).filter(w => ts.has(w)).length })).filter(y => y.n > 0).sort((a, b) => b.n - a.n).slice(0, 2).map(y => y.x.trim()).join(' ').slice(0, 350);
 }
 function rank(db, pool, terms) {
   const { df, docs, n } = index(db), ts = [...new Set(terms)];
   return pool.map(e => { const d = docs.get(e.id); let s = 0;
-    for (const w of ts) { const idf = Math.log(1 + n / (1 + (df.get(w) || 0))); s += idf * ((d.t.has(w) ? 3 : 0) + Math.min(d.s.get(w) || 0, 2) + (d.c.has(w) ? 2 : 0)); }
+    for (const w of ts) { const idf = Math.log(1 + n / (1 + (df.get(w) || 0))); s += idf * ((d.t.has(w) ? 3 : 0) + Math.min(d.s.get(w) || 0, 2) + (d.p.has(w) ? 1 : 0) + (d.c.has(w) ? 2 : 0)); }
     return { e, s }; }).filter(x => x.s > 0).sort((a, b) => b.s - a.s);
 }
 const SYN = { evil: ['villain', 'supervillain', 'sinister', 'maniacal', 'scheme'], boss: ['employer', 'job', 'company'], fat: ['weight', 'obese', 'overweight', 'eating'], expelled: ['expel', 'suspended', 'kicked'], lonely: ['friends', 'friendship', 'alone'], truck: ['trucker', 'driver'], vacation: ['trip', 'travel', 'holiday'] };
@@ -41,6 +46,7 @@ async function chat(sys, user, max) {
   if (!r.ok) throw new Error('openai ' + r.status);
   return JSON.parse((await r.json()).choices[0].message.content);
 }
+const joined = q => { const w = String(q).toLowerCase().match(/[a-z]+/g) || []; return w.slice(1).map((x, i) => stem(w[i] + x)); }; // flame thrower -> flamethrower
 module.exports = async (req, res) => {
   if (req.method !== 'POST') return res.status(405).json({ error: 'POST only' });
   const ip = (req.headers['x-forwarded-for'] || 'x').split(',')[0], now = Date.now();
@@ -54,7 +60,7 @@ module.exports = async (req, res) => {
   const key = q.toLowerCase() + '|' + JSON.stringify(filters);
   if (memo.has(key)) return res.status(200).json(memo.get(key));
   const ai = !!process.env.OPENAI_API_KEY;
-  let terms = tok(q), hints = [];
+  let terms = tok(q).concat(joined(q)), hints = [];
   if (ai) {
     try {
       const x = await chat('A user is describing a Simpsons episode they want to find. Reply as JSON {"terms":[...],"titles":[...]}. "terms": up to 15 single words likely to appear in an official episode synopsis (character names, synonyms such as villain for evil, themes, settings). "titles": up to 4 exact Simpsons episode titles you are fairly confident match the description (empty list if unsure). These are only search hints.', q, 220);
@@ -62,13 +68,13 @@ module.exports = async (req, res) => {
       hints = hinted(pool, (Array.isArray(x.titles) ? x.titles : []).slice(0, 4));
     } catch (e) {}
   }
-  const ranked = rank(db, pool, synonyms(terms)).slice(0, 40).map(x => x.e), hid = new Set(hints.map(e => e.id));
+  const st = synonyms(terms), ranked = rank(db, pool, st).slice(0, 40).map(x => x.e), hid = new Set(hints.map(e => e.id));
   const cands = hints.concat(ranked.filter(e => !hid.has(e.id))).slice(0, 40);
   let out = { ids: cands.map(e => e.id), mode: 'keyword' };
   if (ai && cands.length) {
     try {
-      const list = cands.map(e => ({ id: e.id, code: e.code, title: e.title, synopsis: e.synopsis.slice(0, 400), hinted: hid.has(e.id) }));
-      const r = await chat('You match a user description to Simpsons episodes. You get candidate episodes with titles and official synopses; candidates with hinted=true were independently suggested as likely matches, so prefer them unless their synopsis clearly contradicts the request. Choose ONLY candidates that plausibly match, best first, at most 10. Never add episodes that are not in the list. If none plausibly match, return an empty list. Reply as JSON {"ids":[numbers]}.', JSON.stringify({ request: q, candidates: list }), 120);
+      const list = cands.map(e => ({ id: e.id, code: e.code, title: e.title, synopsis: [e.synopsis, e.wiki && e.wiki.intro].filter(Boolean).join(' | ').slice(0, 700), plotMatch: plotSnip(e, st), hinted: hid.has(e.id) }));
+      const r = await chat('You match a user description to Simpsons episodes. You get candidate episodes with titles, synopses (and Wikipedia plot excerpts where available); candidates with hinted=true were independently suggested as likely matches, so prefer them unless their synopsis clearly contradicts the request. Choose ONLY candidates that plausibly match, best first, at most 10. Never add episodes that are not in the list. If none plausibly match, return an empty list. Reply as JSON {"ids":[numbers]}.', JSON.stringify({ request: q, candidates: list }), 120);
       const valid = new Set(cands.map(e => e.id)), pick = [...new Set((r.ids || []).map(Number))].filter(i => valid.has(i));
       out = { ids: pick.concat(out.ids.filter(i => !pick.includes(i)).slice(0, pick.length ? 10 : 0)), mode: 'ai' };
     } catch (e) {}
