@@ -1,0 +1,1 @@
+{"name":"simpsons-episode-finder","version":"2.0.0","private":true,"engines":{"node":">=18"},"scripts":{"update":"node scripts/fetch-episodes.js"}}
