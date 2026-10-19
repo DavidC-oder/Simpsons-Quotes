@@ -6,12 +6,13 @@ const stem = w => (w.length > 4 ? w.replace(/(ing|ed|es|s)$/, '') : w);
 const tok = s => (String(s).toLowerCase().match(/[a-z0-9]+/g) || []).filter(w => w.length > 2 && !STOP.has(w)).map(stem);
 const filt = (eps, f = {}) => eps.filter(e => (!f.s || e.season == f.s) && (!f.c || e.characters.includes(f.c)) && (!f.h || e.halloween) && (!f.t || e.title.toLowerCase().includes(String(f.t).toLowerCase())) &&
   (!f.e || (f.e === 'classic' ? e.season <= 10 : Math.floor(+(e.airdate || '0').slice(0, 4) / 10) * 10 == +String(f.e).slice(1))));
+const joinTok = t => { const w = String(t).toLowerCase().match(/[a-z]+/g) || []; return w.slice(1).map((x, i) => stem(w[i] + x)); };
 const cnt = a => { const m = new Map(); a.forEach(w => m.set(w, (m.get(w) || 0) + 1)); return m; };
 function index(db) {
   if (idx.has(db)) return idx.get(db);
   const df = new Map(), docs = new Map();
   for (const e of db.episodes) {
-    const t = tok(e.title), s = tok(e.synopsis + ' ' + (e.wiki ? e.wiki.intro : '')), p = tok(e.wiki ? e.wiki.plot || '' : ''), c = tok(e.characters.join(' '));
+    const t = tok(e.title), s = tok(e.synopsis + ' ' + (e.wiki ? e.wiki.intro : '')), p = tok(e.wiki ? e.wiki.plot || '' : '').concat(joinTok(e.wiki ? e.wiki.plot || '' : '')), c = tok(e.characters.join(' '));
     docs.set(e.id, { t: new Set(t), s: cnt(s), p: new Set(p), c: new Set(c) });
     new Set([...t, ...s, ...p, ...c]).forEach(w => df.set(w, (df.get(w) || 0) + 1));
   }
@@ -24,7 +25,7 @@ function plotSnip(e, terms) {
 function rank(db, pool, terms) {
   const { df, docs, n } = index(db), ts = [...new Set(terms)];
   return pool.map(e => { const d = docs.get(e.id); let s = 0;
-    for (const w of ts) { const idf = Math.log(1 + n / (1 + (df.get(w) || 0))); s += idf * ((d.t.has(w) ? 3 : 0) + Math.min(d.s.get(w) || 0, 2) + (d.p.has(w) ? 1 : 0) + (d.c.has(w) ? 2 : 0)); }
+    for (const w of ts) { const idf = Math.log(1 + n / (1 + (df.get(w) || 0))); s += idf * ((d.t.has(w) ? 3 : 0) + Math.min(d.s.get(w) || 0, 2) + (d.p.has(w) ? 1.5 : 0) + (d.c.has(w) ? 2 : 0)); }
     return { e, s }; }).filter(x => x.s > 0).sort((a, b) => b.s - a.s);
 }
 const SYN = { evil: ['villain', 'supervillain', 'sinister', 'maniacal', 'scheme'], boss: ['employer', 'job', 'company'], fat: ['weight', 'obese', 'overweight', 'eating'], expelled: ['expel', 'suspended', 'kicked'], lonely: ['friends', 'friendship', 'alone'], truck: ['trucker', 'driver'], vacation: ['trip', 'travel', 'holiday'] };

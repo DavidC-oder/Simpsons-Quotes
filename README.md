@@ -16,3 +16,6 @@ No paid services. Episode data: TVmaze (CC BY-SA 4.0, no API key).
 
 ## Search
 `/api/search`: (1) gpt-4o-mini expands your description into synopsis-style keywords and suggests likely episode titles (used only as hints and matched to real database titles), (2) keyword ranking over the real episodes, (3) gpt-4o-mini picks which of the top 40 candidates truly match, judged only from the supplied synopses. Returned ids are validated against the database, so nothing can be invented. Without an OpenAI key, or if OpenAI fails, keyword search is used. Costs are limited by 300-character inputs, small outputs, caching and 10 searches/min/IP.
+
+## Effects
+Picking a character in the Filters dropdown plays one of three animations for that character (home page preview and again on the results page, whatever the results are). Effects are defined in `FX` in `app.js`; characters without an entry get generic confetti/donut/note effects. Treehouse of Horror episodes get a bloody, spooky card style.

@@ -108,3 +108,20 @@ details.more{margin:6px 0}details.more summary{cursor:pointer;font-weight:700;co
 .st-nelson{font-family:'Luckiest Guy',cursive;color:#fff;-webkit-text-stroke:3px #5a189a;text-shadow:5px 5px 0 #5a189a}
 .st-apu{font-family:'Titan One',cursive;color:#fff;background:linear-gradient(#d62828 0 50%,#1e5bb8 50%);border:5px solid #fff;outline:4px solid #1b2a41;padding:.15em .5em;text-shadow:2px 2px 0 #1b2a41;font-size:clamp(1.5rem,7vw,3rem)}
 .banner.st-news{font-family:'Oswald',sans-serif;text-transform:uppercase;letter-spacing:.1em;font-size:2.2rem}
+
+/* word effects */
+.fx b.w{font-family:var(--wf,var(--f));color:var(--wc,#fff);-webkit-text-stroke:2px var(--wo,var(--d));paint-order:stroke fill;white-space:nowrap;font-weight:400}
+.wc-bart{--wf:'Permanent Marker';--wc:#ff9f1c}.wc-burns{--wf:'Cinzel';--wc:#d8f3dc;--wo:#12351f}.wc-cbg{--wf:'Bangers';--wc:#fff;--wo:#d62828}.wc-bob{--wf:'Playfair Display';--wc:#b00020;--wo:#fff}
+.wc-marge{--wf:'Pacifico';--wc:#4fa3e0}.wc-krusty{--wf:'Chewy';--wc:#ffd60a;--wo:#d62828}.wc-ned{--wf:'Pacifico';--wc:#7bd47b;--wo:#1b5e20}.wc-nelson{--wf:'Luckiest Guy';--wc:#fff;--wo:#5a189a}
+.wc-apu{--wf:'Titan One';--wc:#fff;--wo:#1e5bb8}.wc-moe{--wf:'Rye';--wc:#f6e6c0;--wo:#5b3a1e}.wc-homer{--wc:#FBE78F}.wc-lisa{--wc:#ff7eb6}.wc-skinner{--wc:#ffd6a5}.wc-ralph{--wc:#ff9aa2}
+/* Treehouse of Horror cards */
+.card.toh{background:linear-gradient(#2b0a3d,#150320);color:#ffe9c4;border-color:#ff7a00;box-shadow:5px 5px 0 #3d0a0a,0 0 22px rgba(255,122,0,.45);padding-top:52px;animation:pop .45s cubic-bezier(.3,1.5,.5,1) both,glow 3s ease-in-out infinite}
+@keyframes glow{50%{box-shadow:5px 5px 0 #3d0a0a,0 0 34px rgba(160,60,255,.65)}}
+.card.toh:before{content:"";position:absolute;left:0;right:0;top:0;height:64px;pointer-events:none;border-radius:18px 18px 0 0;transform-origin:top;animation:drip 1.6s .3s ease-out both;background:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 120 64'%3E%3Cpath fill='%23b3001b' d='M0 0H120V14C110 14 108 14 106 24C104 46 98 46 96 24C95 16 80 14 78 20C76 32 72 60 66 60C60 60 62 30 58 20C54 14 40 14 36 20C34 28 34 38 30 38C26 38 26 28 24 20C20 14 10 14 0 14Z'/%3E%3Cpath fill='%23e0102f' opacity='.55' d='M0 0H120V6H0Z'/%3E%3C/svg%3E") repeat-x top left/120px 64px}
+@keyframes drip{from{transform:scaleY(.1);opacity:.4}}
+.card.toh h3{font-family:'Creepster','Lilita One',cursive;font-size:1.9rem;color:#ff9d2e;letter-spacing:1px;text-shadow:2px 2px 0 #3d0a0a}
+.card.toh .meta,.card.toh .syn{color:#ffe9c4}.card.toh .meta b{color:#ff9d2e}
+.card.toh .badge{background:#7a1fd1}.card.toh .chars span{background:#2b0a3d;color:#ffe9c4;border-color:#ff7a00}
+.card.toh details.more summary{color:#ff9d2e}.card.toh .src{color:#ffe9c4}
+.card.toh .acts button{background:#ff7a00;color:#150320}.card.toh .acts button.on{background:#b3001b;color:#fff}
+.card.toh.saved{border-color:#d6247a}.card.toh .ribbon{top:8px}
